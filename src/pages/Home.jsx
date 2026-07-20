@@ -1,21 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-import useMapData from '../context/MapDataContext.jsx'
+import useMapData from '../context/useMapData.js'
 import { useNavigate } from 'react-router-dom'
-import useAuth from '../context/AuthContext.jsx'
+import useAuth from '../context/useAuth.js'
 import  AddReportComp from '../components/AddReportComp.jsx'
-import { MarkerIcon } from '../components/MarkerIcon.jsx'
 import DeleteReport from '../components/DeleteReport.jsx'
 import L from 'leaflet';
 import UserMarker from '../components/UserMarker.jsx'
+import mapPin from '../assets/map-pin.svg'
+import { createDirectConversation } from '../api/conversations.js'
 
 
 export default function Home() {
-    const { position, loading, updatePos, users, reports, userIcon, ICONS } = useMapData()
+    const { position, loading, updatePos, users, reports, removeReport, userIcon, ICONS } = useMapData()
     const navigate = useNavigate()
     const { user, displayName } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
     const [locationError, setLocationError] = useState(null)
+    const [messageError, setMessageError] = useState('')
+    const [startingChatUserId, setStartingChatUserId] = useState(null)
     const map = useRef()
 
     const MarkerIcon = new L.Icon({
@@ -24,13 +27,28 @@ export default function Home() {
         popupAnchor:  [-0, -0],
         iconSize: [32,45], 
     });
+    const nearbyUserIcon = new L.Icon({
+        iconUrl: mapPin,
+        iconRetinaUrl: mapPin,
+        popupAnchor: [-0, -0],
+        iconSize: [30, 42],
+    });
     const centerMap = () => {
         if (map.current && !loading) map.current.flyTo([position.latitude, position.longitude])
 
     }
-    useEffect(() => {
-        console.log(position)
-    }, [position])
+    async function handleStartConversation(otherUserId) {
+        try {
+            setMessageError('')
+            setStartingChatUserId(otherUserId)
+            const conversation = await createDirectConversation(otherUserId)
+            navigate(`/messages/${conversation.id}`)
+        } catch (error) {
+            setMessageError(error.message || 'Unable to start conversation.')
+        } finally {
+            setStartingChatUserId(null)
+        }
+    }
 
     useEffect(() => {
         if (!user) navigate('/login')
@@ -68,15 +86,28 @@ export default function Home() {
                 />
                 <UserMarker MarkerIcon={MarkerIcon} displayName={displayName} position={position} first_name={user.first_name}/>
                 {users.map(user => (
-                    <Marker key={user.user_id} icon={MarkerIcon} position={[user.lat, user.lng]}>
-
+                    <Marker key={user.user_id} icon={nearbyUserIcon} position={[user.lat, user.lng]}>
+                        <Popup>
+                            <div className="user-popup">
+                                <span>User nearby</span>
+                                <button
+                                    className="message-action"
+                                    disabled={!user.allow_incoming_messages || startingChatUserId === user.user_id}
+                                    onClick={() => handleStartConversation(user.user_id)}
+                                    type="button"
+                                >
+                                    {buttonText(user, startingChatUserId)}
+                                </button>
+                                {messageError ? <p className="popup-error">{messageError}</p> : null}
+                            </div>
+                        </Popup>
                     </Marker>
                 ))}
                 {reports.map(report => (
                     <Marker key={report.id} position={[report.latitude, report.longitude]}>
                     <Popup>
                         {report.report_type}
-                          <DeleteReport report_id={report.id} />
+                          {report.user_id === user.id && <DeleteReport report_id={report.id} onDeleted={removeReport} />}
                     </Popup>
                     </Marker>
                 ))}
@@ -111,4 +142,10 @@ export default function Home() {
             </button>
         </div>
     </>
+}
+
+function buttonText(user, startingChatUserId) {
+    if (!user.allow_incoming_messages) return 'Messages disabled'
+    if (startingChatUserId === user.user_id) return 'Opening...'
+    return 'Message user'
 }

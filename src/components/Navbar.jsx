@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom"
 import './Navbar.css';
-import useAuth from "../context/AuthContext.jsx";
+import useAuth from "../context/useAuth.js";
 
 export default function Navbar() {
     const { user, logoutUser, displayName } = useAuth()
@@ -25,6 +25,13 @@ export default function Navbar() {
                         <span className="profile-name">{displayName}</span>
                         {user.email ? <span className="profile-email">{user.email}</span> : null}
                     </span>
+                </NavLink>
+            ) : null}
+            {user ? (
+                <NavLink className='nav-link' to="/messages" aria-label="Messages">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="icon">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3h6m-7.5 8.25 3-3H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v8.25A2.25 2.25 0 0 0 6 16.5h.75v3Z" />
+                    </svg>
                 </NavLink>
             ) : null}
             <NavLink className='nav-link' to={user? '/profile': '/login'}>

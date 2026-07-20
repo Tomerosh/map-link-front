@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import useAuth from "./AuthContext.jsx";
+import { useCallback, useEffect, useRef, useState } from "react";
+import useAuth from "./useAuth.js";
 import { API_BASE_URL } from "../api/client.js";
+import MapDataContext from "./mapDataContextValue.js";
 import bicycle from "../assets/bicycle-pin.svg"
 import scooter from "../assets/scooter-pin.svg"
 import car from "../assets/car-pin.svg"
@@ -9,14 +10,9 @@ import taxi from "../assets/taxi-pin.svg"
 import bus from "../assets/bus-pin.svg"
 import truck from "../assets/truck-pin.svg"
 
-const MapDataContext = createContext()
 const LOCATION_UPDATE_THRESHOLD_METERS = 5
 const MAP_REFRESH_INTERVAL_MS = 5000
 const LOCATION_WS_URL = `${API_BASE_URL.replace(/^http/, "ws")}/api/v1/location/ws`
-
-export default function useMapData() {
-    return useContext(MapDataContext)
-}
 
 export function MapDataProvider({ children }) {
     const ICONS = {
@@ -42,6 +38,10 @@ export function MapDataProvider({ children }) {
         setUserIcon(() => {
             localStorage.setItem("userIcon", iconName)
             return iconName})
+    }
+
+    function removeReport(reportId) {
+        setReports((currentReports) => currentReports.filter((report) => report.id !== reportId))
     }
 
     const updatePos = useCallback((e) => {
@@ -128,7 +128,7 @@ export function MapDataProvider({ children }) {
 
     return (
         <>
-            <MapDataContext.Provider value={{ position, updatePos, loading, users, reports, userIcon, updateUserIcon, ICONS }}>
+            <MapDataContext.Provider value={{ position, updatePos, loading, users, reports, removeReport, userIcon, updateUserIcon, ICONS }}>
                 {children}
             </MapDataContext.Provider>
         </>

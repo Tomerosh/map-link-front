@@ -6,6 +6,8 @@ import NotFound from './pages/NotFound.jsx'
 import Login from './pages/user/Login.jsx'
 import Register from './pages/user/Register.jsx'
 import Profile from './pages/user/Profile.jsx'
+import Conversations from './pages/messages/Conversations.jsx'
+import ConversationThread from './pages/messages/ConversationThread.jsx'
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,8 @@ const router = createBrowserRouter([
       {path:'login', element:<Login/>},
       {path:'register', element:<Register/>},
       {path:'profile', element:<Profile/>},
+      {path:'messages', element:<Conversations/>},
+      {path:'messages/:conversationId', element:<ConversationThread/>},
       {path:'*', element:<NotFound/>},
     ]
   }])

@@ -1,11 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as authApi from '../api/auth.js'
-
-const AuthContext = createContext()
-
-export default function useAuth() {
-    return useContext(AuthContext)
-}
+import * as userSettingsApi from '../api/userSettings.js'
+import AuthContext from "./authContextValue.js";
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
@@ -42,6 +38,12 @@ export function AuthProvider({ children }) {
         return data.user
     }
 
+    const updateUserSettings = async (payload) => {
+        const settings = await userSettingsApi.updateUserSettings(payload)
+        setUser((currentUser) => currentUser ? { ...currentUser, ...settings } : currentUser)
+        return settings
+    }
+
     async function logoutUser () {
         try {
             await authApi.logout()
@@ -51,7 +53,7 @@ export function AuthProvider({ children }) {
     }
     return (
         <>{loading ? "Loading.." :
-            <AuthContext.Provider value={{ user, loginUser, logoutUser, registerUser, displayName }}>
+            <AuthContext.Provider value={{ user, loginUser, logoutUser, registerUser, updateUserSettings, displayName }}>
                 {children}
             </AuthContext.Provider>}
         </>
