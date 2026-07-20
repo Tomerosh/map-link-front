@@ -4,6 +4,8 @@ import useMapData from '../context/MapDataContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import useAuth from '../context/AuthContext.jsx'
 import  AddReportComp from '../components/AddReportComp.jsx'
+import { MarkerIcon } from '../components/MarkerIcon.jsx'
+import DeleteReport from '../components/DeleteReport.jsx'
 import L from 'leaflet';
 import UserMarker from '../components/UserMarker.jsx'
 
@@ -74,6 +76,7 @@ export default function Home() {
                     <Marker key={report.id} position={[report.latitude, report.longitude]}>
                     <Popup>
                         {report.report_type}
+                          <DeleteReport report_id={report.id} />
                     </Popup>
                     </Marker>
                 ))}
