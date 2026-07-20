@@ -27,7 +27,7 @@ export function MapDataProvider({ children }) {
         if (!position) return;
         if (!user) return
         const getUserDataSocket = () => {    
-            const ws = new WebSocket('ws://127.0.0.1:8000/location/ws');
+            const ws = new WebSocket('ws://localhost:8000/api/v1/location/ws');
             ws.onopen = () => {
                 ws.send(JSON.stringify({ lat: position.latitude, lng: position.longitude }));
             };
@@ -37,6 +37,7 @@ export function MapDataProvider({ children }) {
                 if (data.type === "nearby_map_data") {
                     setUsers(data.users || []);
                     setReports(data.reports || []);
+                    console.log(data)
                 }
             };
 
