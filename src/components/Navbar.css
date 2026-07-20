@@ -1,0 +1,102 @@
+/* Navbar */
+#navbar {
+  background: var(--nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-link {
+  display: flex;
+  overflow: hidden;
+  stroke: var(--text);
+  color: var(--text);
+  font-weight: 600;
+  text-decoration-line: none;
+  transition-property: color stroke width;
+  padding: 15px;
+  transition-duration: 300ms;
+}
+.nav-link:hover {
+  color: var(--link-hover);
+  stroke: var(--link-hover);
+  text-decoration-line: none;
+}
+
+.nav-link.active {
+  color: var(--active-link);
+  stroke: var(--active-link);
+  text-decoration-line:underline;
+}
+
+.nav-link.active svg {
+  stroke: var(--active-link);
+}
+
+/* Base link style - looks like a compact button initially */
+.nav-link-expandable {
+  display: flex;
+  align-items: center;
+  gap: 0px; /* Starts at 0 to keep text tightly tucked away */
+  width: 44px; /* Matches the square dimensions of just the icon padding */
+  height: 44px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #4b5563;
+  overflow: hidden; /* Critical to hide the text when collapsed */
+  box-sizing: border-box;
+  
+  /* Smooth transition for expanding width and changing background colors */
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              gap 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.2s ease, 
+              color 0.2s ease;
+}
+
+/* Icon styles */
+.icon {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0; /* Prevents the SVG from squeezing during width transition */
+}
+
+/* Initial text styles - completely hidden and transparent */
+.nav-title {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  white-space: nowrap; /* Prevents text from breaking into lines while opening */
+  opacity: 0;
+  transform: translateX(-10px); /* Subtle slide-in effect */
+  
+  /* Opacity transition lags slightly behind width for a cleaner visual look */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover Effects */
+.nav-link-expandable:hover {
+  width: 140px; /* Target expanded width */
+  gap: 12px; /* Generates spacing between icon and text */
+  color: #111827;
+}
+
+.nav-link-expandable:hover .nav-title {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.1s; /* Waits for the card to widen slightly before showing text */
+}
+.nav-title{
+    color: var(--text);
+}
+
+/* Active Page State */
+.nav-link-expandable.active .nav-title {
+  color: var(--active-link);
+}
+
+.nav-link-expandable.active .icon {
+  stroke: var(--active-link);
+}
+
+.logout {
+  cursor: pointer;
+}

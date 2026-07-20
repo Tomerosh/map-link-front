@@ -3,10 +3,15 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPosition } from '../store/MapDataSlice'
 import useMapData from '../context/MapDataContext'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import useAuth from '../context/AuthContext'
 
 export default function Home() {
     const { position, loading, updatePos } = useMapData()
+    const navigate = useNavigate()
+    const { user } = useAuth()
+    // const position = useSelector(state => state.position)
+    // const dispatch = useDispatch()
 
     const map = useRef()
 
@@ -22,10 +27,13 @@ export default function Home() {
     }, [position])
 
     useEffect(() => {
+        if (!user) navigate('/login')
+        else {
         const checkLocation = setInterval(() => {
             navigator.geolocation.getCurrentPosition(updatePos)
         }, 5000)
         return () => clearInterval(checkLocation)
+        }
     })
 
 
@@ -44,7 +52,6 @@ export default function Home() {
                     </Popup>
                 </Marker>
             </MapContainer>
-            <Link to={'/login'} >Login</Link>
             <div className='center-map' onClick={centerMap}>
                 <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                     <g id="Layer_2" data-name="Layer 2">

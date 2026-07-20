@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import Login from './pages/user/Login'
 import Register from './pages/user/Register'
+import Profile from './pages/user/Profile'
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
       // {path:'fav', element:<Favorites/>},
       {path:'login', element:<Login/>},
       {path:'register', element:<Register/>},
-      // {path:'profile', element:<Profile/>}
+      {path:'profile', element:<Profile/>},
       {path:'*', element:<NotFound/>},
     ]
   }])
