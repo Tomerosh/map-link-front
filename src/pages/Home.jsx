@@ -8,19 +8,17 @@ import DeleteReport from '../components/DeleteReport.jsx'
 import L from 'leaflet';
 import UserMarker from '../components/UserMarker.jsx'
 import mapPin from '../assets/map-pin.svg'
-import { createDirectConversation } from '../api/conversations.js'
 
 
 export default function Home() {
     const { position, loading, updatePos, users, reports, removeReport, userIcon, ICONS } = useMapData()
     const navigate = useNavigate()
-    const { user, displayName } = useAuth()
+    const { user } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
     const [locationError, setLocationError] = useState(null)
-    const [messageError, setMessageError] = useState('')
-    const [startingChatUserId, setStartingChatUserId] = useState(null)
     const map = useRef()
 
+    const displayName = (usr) => [usr?.first_name, usr?.last_name].filter(Boolean).join(' ') || usr?.username
     const MarkerIcon = new L.Icon({
         iconUrl: ICONS[userIcon],
         iconRetinaUrl: ICONS[userIcon],
@@ -36,18 +34,6 @@ export default function Home() {
     const centerMap = () => {
         if (map.current && !loading) map.current.flyTo([position.latitude, position.longitude])
 
-    }
-    async function handleStartConversation(otherUserId) {
-        try {
-            setMessageError('')
-            setStartingChatUserId(otherUserId)
-            const conversation = await createDirectConversation(otherUserId)
-            navigate(`/messages/${conversation.id}`)
-        } catch (error) {
-            setMessageError(error.message || 'Unable to start conversation.')
-        } finally {
-            setStartingChatUserId(null)
-        }
     }
 
     useEffect(() => {
@@ -84,24 +70,9 @@ export default function Home() {
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <UserMarker MarkerIcon={MarkerIcon} displayName={displayName} position={position} first_name={user.first_name}/>
-                {users.map(user => (
-                    <Marker key={user.user_id} icon={nearbyUserIcon} position={[user.lat, user.lng]}>
-                        <Popup>
-                            <div className="user-popup">
-                                <span>User nearby</span>
-                                <button
-                                    className="message-action"
-                                    disabled={!user.allow_incoming_messages || startingChatUserId === user.user_id}
-                                    onClick={() => handleStartConversation(user.user_id)}
-                                    type="button"
-                                >
-                                    {buttonText(user, startingChatUserId)}
-                                </button>
-                                {messageError ? <p className="popup-error">{messageError}</p> : null}
-                            </div>
-                        </Popup>
-                    </Marker>
+                <UserMarker MarkerIcon={MarkerIcon} displayName={displayName(user)} position={position} user={user} self={true}/>
+                {users.map(userOther => (
+                    <UserMarker MarkerIcon={nearbyUserIcon} displayName={displayName(userOther)} position={userOther.position} user={userOther}/>
                 ))}
                 {reports.map(report => (
                     <Marker key={report.id} position={[report.latitude, report.longitude]}>
@@ -112,11 +83,6 @@ export default function Home() {
                     </Marker>
                 ))}
             </MapContainer>
-            {user.hide_me ? (
-                <div className="map-privacy-status">
-                    Hidden on map
-                </div>
-            ) : null}
             <button className="report-toggle" onClick={() => setShowReportForm(!showReportForm)}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="icon">
                     <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
@@ -147,10 +113,4 @@ export default function Home() {
             </button>
         </div>
     </>
-}
-
-function buttonText(user, startingChatUserId) {
-    if (!user.allow_incoming_messages) return 'Messages disabled'
-    if (startingChatUserId === user.user_id) return 'Opening...'
-    return 'Message user'
 }

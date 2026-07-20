@@ -84,6 +84,7 @@ export function MapDataProvider({ children }) {
                 setUsers(data.users || [])
                 setReports(data.reports || [])
             }
+            console.log(data)
 
             if (data.type === "auth_error") {
                 console.error("Location websocket auth error:", data.message)

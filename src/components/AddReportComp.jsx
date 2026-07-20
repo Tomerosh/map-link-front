@@ -6,7 +6,7 @@ const AddReportComp = ({ latitude, longitude }) => {
   const [message, setMessage] = useState("");
 
   const reportTypes = [
-    {"POLICE": policeIcon},
+    "POLICE",
     "FLOODING",
     "ROAD_DANGER",
     "TRAFFIC_JAM",

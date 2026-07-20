@@ -1,11 +1,13 @@
 import { NavLink, useNavigate } from "react-router-dom"
 import './Navbar.css';
 import useAuth from "../context/useAuth.js";
+import appIcon from "../assets/icon.png"
 
 export default function Navbar() {
-    const { user, logoutUser, displayName } = useAuth()
+    const { user, logoutUser } = useAuth()
     const navigate = useNavigate()
 
+    const displayName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.username
 
     async function handleLogout() {
         await logoutUser()
@@ -15,6 +17,7 @@ export default function Navbar() {
     return (
         <nav id="navbar">
             <NavLink className="toolbar-brand" to="/">
+            <img src={appIcon}/>
                 Map Link
             </NavLink>
             <div className="toolbar-spacer" />
