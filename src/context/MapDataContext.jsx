@@ -40,7 +40,7 @@ export function MapDataProvider({ children }) {
                     setReports(data.reports || []);
                     console.log(data)
                 }
-            };
+                    }            };
 
             const cleanup = getUserDataSocket();
 
@@ -50,7 +50,7 @@ export function MapDataProvider({ children }) {
 
     return (
         <>
-            <MapDataContext.Provider value={{ position, updatePos, loading, users }}>
+            <MapDataContext.Provider value={{ position, updatePos, loading, users, reports }}>
                 {children}
             </MapDataContext.Provider>
         </>

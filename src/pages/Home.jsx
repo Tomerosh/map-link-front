@@ -9,7 +9,7 @@ import  AddReportComp from '../components/AddReportComp'
 import { MarkerIcon } from '../components/MarkerIcon'
 
 export default function Home() {
-    const { position, loading, updatePos, users } = useMapData()
+    const { position, loading, updatePos, users, reports } = useMapData()
     const navigate = useNavigate()
     const { user } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
@@ -50,8 +50,15 @@ export default function Home() {
                     </Popup>
                 </Marker>
                 {users.map(user => (
-                    <Marker icon={MarkerIcon} position={[user.latitude, user.longitude]}>
+                    <Marker key={user.id} icon={MarkerIcon} position={[user.latitude, user.longitude]}>
 
+                    </Marker>
+                ))}
+                {reports.map(report => (
+                    <Marker key={report} position={[report.latitude, report.longitude]}>
+                    <Popup>
+                        {report.report_type}
+                    </Popup>
                     </Marker>
                 ))}
             </MapContainer>
