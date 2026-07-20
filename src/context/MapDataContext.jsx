@@ -16,44 +16,46 @@ export function MapDataProvider({ children }) {
     const updatePos = (e) => {
         setPosition({
             latitude: e.coords.latitude,
-             longitude: e.coords.longitude})
+            longitude: e.coords.longitude
+        })
         if (loading) {
             setLoading(false)
         }
-        
+
     }
-+
-   useEffect(() => {
-        if (!position) return;
-        if (!user) return
-        const getUserDataSocket = () => {    
-            const ws = new WebSocket('ws://127.0.0.1:8000/location/ws');
-            ws.onopen = () => {
-                ws.send(JSON.stringify({ lat: position.latitude, lng: position.longitude }));
+    +
+        useEffect(() => {
+            if (!position) return;
+            if (!user) return
+            const getUserDataSocket = () => {
+                const ws = new WebSocket('ws://localhost:8000/api/v1/location/ws');
+                ws.onopen = () => {
+                    ws.send(JSON.stringify({ lat: position.latitude, lng: position.longitude }));
+                };
+
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === "nearby_map_data") {
+                        setUsers(data.users || []);
+                        setReports(data.reports || []);
+                    }
+                    setUsers([{id: 0, latitude: 32.5, longitude: 32}])
+                };
+
+                return () => {
+                    ws.close();
+                };
             };
 
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data.type === "nearby_map_data") {
-                    setUsers(data.users || []);
-                    setReports(data.reports || []);
-                }
-            };
+            const cleanup = getUserDataSocket();
 
-            return () => {
-                ws.close();
-            };
-        };
+            return cleanup;
 
-        const cleanup = getUserDataSocket();
-        
-        return cleanup;
-
-    }, [position]);
+        }, [position]);
 
     return (
         <>
-            <MapDataContext.Provider value={{ position, updatePos, loading }}>
+            <MapDataContext.Provider value={{ position, updatePos, loading, users }}>
                 {children}
             </MapDataContext.Provider>
         </>

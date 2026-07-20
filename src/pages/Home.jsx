@@ -5,9 +5,10 @@ import { setPosition } from '../store/MapDataSlice'
 import useMapData from '../context/MapDataContext'
 import { Link, useNavigate } from 'react-router-dom'
 import useAuth from '../context/AuthContext'
+import { MarkerIcon } from '../components/MarkerIcon'
 
 export default function Home() {
-    const { position, loading, updatePos } = useMapData()
+    const { position, loading, updatePos, users } = useMapData()
     const navigate = useNavigate()
     const { user } = useAuth()
     // const position = useSelector(state => state.position)
@@ -40,17 +41,20 @@ export default function Home() {
     if (loading) return 'Loading'
     return <>
         <div>
-
-
             <MapContainer ref={map} className='map-container' center={[position.latitude, position.longitude]} zoom={13} scrollWheelZoom={false}>
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[position.latitude, position.longitude]}>
+                <Marker icon={MarkerIcon} position={[position.latitude, position.longitude]}>
                     <Popup>
                         A pretty CSS3 popup. <br /> Easily customizable.
                     </Popup>
                 </Marker>
+                {users.map(user => (
+                    <Marker icon={MarkerIcon} position={[user.latitude, user.longitude]}>
+
+                    </Marker>
+                ))}
             </MapContainer>
             <div className='center-map' onClick={centerMap}>
                 <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
