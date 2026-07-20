@@ -4,7 +4,7 @@ import useMapData from "../../context/MapDataContext.jsx";
 
 export default function Profile() {
     const { user, logoutUser } = useAuth()
-    const { ICONS, userIcon, setUserIcon } = useMapData()
+    const { ICONS, userIcon, updateUserIcon } = useMapData()
     // const iconClass = () => `big-icon ${userIcon === }`
     const navigate = useNavigate()
     const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ')
@@ -43,7 +43,7 @@ export default function Profile() {
                 <div className="icon-box">
                     {Object.keys(ICONS).map((name) => (
                         <img key={name}
-                            onClick={() => setUserIcon(name)} src={ICONS[name]} alt={name} className={`big-icon ${userIcon === name? 'active':''}`} />
+                            onClick={() => updateUserIcon(name)} src={ICONS[name]} alt={name} className={`big-icon ${userIcon === name? 'active':''}`} />
                     )
                     )}
                 </div>

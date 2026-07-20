@@ -28,7 +28,8 @@ export function MapDataProvider({ children }) {
         bus: bus,
         truck: truck
     }
-    const [userIcon, setUserIcon] = useState('car')
+    const localUserIcon = localStorage.getItem('userIcon')
+    const [userIcon, setUserIcon] = useState(localUserIcon || 'car')
     const [position, setPosition] = useState(null)
     const [users, setUsers] = useState([])
     const [reports, setReports] = useState([])
@@ -36,6 +37,12 @@ export function MapDataProvider({ children }) {
     const { user } = useAuth()
     const wsRef = useRef(null)
     const lastKnownPositionRef = useRef(null)
+
+    function updateUserIcon(iconName) {
+        setUserIcon(() => {
+            localStorage.setItem("userIcon", iconName)
+            return iconName})
+    }
 
     const updatePos = useCallback((e) => {
         const nextPosition = {
@@ -121,7 +128,7 @@ export function MapDataProvider({ children }) {
 
     return (
         <>
-            <MapDataContext.Provider value={{ position, updatePos, loading, users, reports, userIcon, setUserIcon, ICONS }}>
+            <MapDataContext.Provider value={{ position, updatePos, loading, users, reports, userIcon, updateUserIcon, ICONS }}>
                 {children}
             </MapDataContext.Provider>
         </>

@@ -3,10 +3,9 @@ import './Navbar.css';
 import useAuth from "../context/AuthContext.jsx";
 
 export default function Navbar() {
-    const { user, logoutUser } = useAuth()
+    const { user, logoutUser, displayName } = useAuth()
     const navigate = useNavigate()
 
-    const displayName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.username
 
     async function handleLogout() {
         await logoutUser()
