@@ -1,30 +1,117 @@
-
+.map-page {
+  position: relative;
+  min-height: calc(100svh - var(--nav-height));
+  background: var(--surface-soft);
+}
 
 .map-container {
-  height: 92vh;
-  width: 100vw;
+  height: calc(100svh - var(--nav-height));
+  width: 100%;
+}
+
+.report-toggle {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 10;
+}
+
+.report-panel {
+  position: absolute;
+  left: 18px;
+  bottom: 74px;
+  z-index: 10;
+  width: min(340px, calc(100vw - 36px));
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: left;
+  backdrop-filter: blur(10px);
+}
+
+.report-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.report-option {
+  min-height: 38px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.report-option:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+.form-message {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .center-map {
-  background-color: aliceblue;
   position: absolute;
-  bottom: 25px;
-  right: 25px;
-  width: 40px;
-  height: 40px;
-  padding: 5px;
-  border-radius: 16px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  color: var(--text-h);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.center-map:hover {
+  background: var(--surface);
+}
+
+.center-map:active {
+  transform: translateY(1px);
 }
 
 .center-map svg {
-  transition-property: fill;
-  transition-duration: .2s;
-}
-.center-map:hover svg {
-  fill: rgb(105, 105, 105);
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
 }
 
-.leaflet-control { z-index: 0 !important}
-.leaflet-pane { z-index: 0 !important}
-.leaflet-top, .leaflet-bottom {z-index: 0 !important}
+.leaflet-control {
+  z-index: 5 !important;
+}
+
+.leaflet-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 5 !important;
+}
+
+@media (max-width: 560px) {
+  .report-panel {
+    right: 18px;
+    bottom: 76px;
+    width: auto;
+  }
+
+  .report-options {
+    grid-template-columns: 1fr;
+  }
+}

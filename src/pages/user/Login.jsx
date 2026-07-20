@@ -1,17 +1,30 @@
 import { Link, useNavigate } from "react-router-dom"
 import useAuth from "../../context/AuthContext.jsx"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function Login() {
     const { user, loginUser } = useAuth()
     const navigate = useNavigate()
+    const [errorMessage, setErrorMessage] = useState('')
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault()
         const username = e.target[0].value
         const password = e.target[1].value
+        setErrorMessage('')
+
         if (username && password) {
-            loginUser(username, password)
+            try {
+                setIsSubmitting(true)
+                await loginUser(username, password)
+            } catch {
+                setErrorMessage('Username or password are incorrect.')
+            } finally {
+                setIsSubmitting(false)
+            }
+        } else {
+            setErrorMessage('Enter your username and password.')
         }
     }
 
@@ -29,7 +42,8 @@ export default function Login() {
             <input className="form-input" name='username' type="text" placeholder="username"/>
             <label className="form-label" htmlFor="password">Password:</label>
             <input className="form-input" name="password" type="password" placeholder="password"/>
-            <button>Login</button>
+            {errorMessage ? <p className="form-error">{errorMessage}</p> : null}
+            <button disabled={isSubmitting}>{isSubmitting ? 'Logging in...' : 'Login'}</button>
             <span>Don't have an account? <Link to="/register" className="link">Register</Link></span>
         </form>
         </div>

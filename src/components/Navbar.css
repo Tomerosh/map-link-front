@@ -1,102 +1,133 @@
-/* Navbar */
 #navbar {
-  background: var(--nav);
+  height: var(--nav-height);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
+  padding: 0 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
 }
-.nav-link {
+
+.toolbar-brand {
+  color: var(--text-h);
+  font-size: 1rem;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.profile-summary {
+  min-width: 0;
+  max-width: 280px;
   display: flex;
-  overflow: hidden;
-  stroke: var(--text);
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 6px;
   color: var(--text);
-  font-weight: 600;
-  text-decoration-line: none;
-  transition-property: color stroke width;
-  padding: 15px;
-  transition-duration: 300ms;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background-color 160ms ease;
 }
+
+.profile-summary:hover,
+.profile-summary.active {
+  background: var(--surface-soft);
+}
+
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: #ffffff;
+  background: var(--accent);
+  border-radius: 50%;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.profile-text {
+  min-width: 0;
+  display: grid;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.profile-name,
+.profile-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-name {
+  color: var(--text-h);
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.profile-email {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.nav-link {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--muted);
+  background: transparent;
+  border-radius: var(--radius);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
 .nav-link:hover {
-  color: var(--link-hover);
-  stroke: var(--link-hover);
-  text-decoration-line: none;
+  color: var(--text-h);
+  background: var(--surface-soft);
 }
 
 .nav-link.active {
-  color: var(--active-link);
-  stroke: var(--active-link);
-  text-decoration-line:underline;
+  color: var(--accent);
+  background: rgba(37, 99, 235, 0.1);
 }
 
-.nav-link.active svg {
-  stroke: var(--active-link);
-}
-
-/* Base link style - looks like a compact button initially */
-.nav-link-expandable {
-  display: flex;
-  align-items: center;
-  gap: 0px; /* Starts at 0 to keep text tightly tucked away */
-  width: 44px; /* Matches the square dimensions of just the icon padding */
-  height: 44px;
-  border-radius: 12px;
-  text-decoration: none;
-  color: #4b5563;
-  overflow: hidden; /* Critical to hide the text when collapsed */
-  box-sizing: border-box;
-  
-  /* Smooth transition for expanding width and changing background colors */
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              gap 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.2s ease, 
-              color 0.2s ease;
-}
-
-/* Icon styles */
 .icon {
-  width: 25px;
-  height: 25px;
-  flex-shrink: 0; /* Prevents the SVG from squeezing during width transition */
-}
-
-/* Initial text styles - completely hidden and transparent */
-.nav-title {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
-  white-space: nowrap; /* Prevents text from breaking into lines while opening */
-  opacity: 0;
-  transform: translateX(-10px); /* Subtle slide-in effect */
-  
-  /* Opacity transition lags slightly behind width for a cleaner visual look */
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-/* Hover Effects */
-.nav-link-expandable:hover {
-  width: 140px; /* Target expanded width */
-  gap: 12px; /* Generates spacing between icon and text */
-  color: #111827;
-}
-
-.nav-link-expandable:hover .nav-title {
-  opacity: 1;
-  transform: translateX(0);
-  transition-delay: 0.1s; /* Waits for the card to widen slightly before showing text */
-}
-.nav-title{
-    color: var(--text);
-}
-
-/* Active Page State */
-.nav-link-expandable.active .nav-title {
-  color: var(--active-link);
-}
-
-.nav-link-expandable.active .icon {
-  stroke: var(--active-link);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
 .logout {
-  cursor: pointer;
+  color: var(--danger);
+}
+
+.logout:hover {
+  color: var(--danger);
+  background: #fee2e2;
+}
+
+@media (max-width: 560px) {
+  #navbar {
+    padding: 0 12px;
+  }
+
+  .profile-summary {
+    max-width: 156px;
+    padding-right: 8px;
+  }
+
+  .profile-email {
+    display: none;
+  }
 }

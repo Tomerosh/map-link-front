@@ -47,11 +47,11 @@ export default function Home() {
     }, [navigate, updatePos, user])
 
 
-    if (locationError) return locationError
-    if (loading) return 'Loading'
-    if (!position) return 'Unable to get your location'
+    if (locationError) return <main className="status-screen">{locationError}</main>
+    if (loading) return <main className="status-screen">Loading</main>
+    if (!position) return <main className="status-screen">Unable to get your location</main>
     return <>
-        <div>
+        <div className="map-page">
             <MapContainer ref={map} className='map-container' center={[position.latitude, position.longitude]} zoom={13} scrollWheelZoom={false}>
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -74,7 +74,7 @@ export default function Home() {
                     </Marker>
                 ))}
             </MapContainer>
-            <button onClick={() => setShowReportForm(!showReportForm)}>
+            <button className="report-toggle" onClick={() => setShowReportForm(!showReportForm)}>
                 {showReportForm ? "Hide Report Menu" : "Add Report"}
             </button>
 
@@ -84,7 +84,7 @@ export default function Home() {
                     longitude={position.longitude} 
                 />
             )}
-            <div className='center-map' onClick={centerMap}>
+            <button className='center-map' onClick={centerMap} aria-label="Center map">
                 <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                     <g id="Layer_2" data-name="Layer 2">
                         <g id="invisible_box" data-name="invisible box">
@@ -98,7 +98,7 @@ export default function Home() {
                         </g>
                     </g>
                 </svg>
-            </div>
+            </button>
         </div>
     </>
 }

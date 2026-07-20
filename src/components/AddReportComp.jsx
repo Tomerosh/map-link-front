@@ -36,12 +36,13 @@ const AddReportComp = ({ latitude, longitude }) => {
   };
 
   return (
-    <div>
-      <h3>Select Report Type:</h3>
+    <div className="report-panel">
+      <h3>Select Report Type</h3>
       
-      <div>
+      <div className="report-options">
         {reportTypes.map((type) => (
           <button
+            className="report-option"
             key={type}
             disabled={loading}
             onClick={() => handleReportSubmit(type)}
@@ -51,7 +52,7 @@ const AddReportComp = ({ latitude, longitude }) => {
         ))}
       </div>
 
-      {message && <p>{message}</p>}
+      {message && <p className="form-message">{message}</p>}
     </div>
   );
 };
