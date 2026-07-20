@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useAuth from "../../providers/AuthProvider"
+import useAuth from "../../context/AuthContext.jsx"
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 export default function User() {
@@ -16,7 +16,7 @@ export default function User() {
         else if (!location.pathname.includes('profile')) {
             navigate('/user/profile')
         }
-    }, [location, user])
+    }, [location, navigate, user])
 
     return (
         <div className="center">

@@ -1,10 +1,7 @@
-import { useEffect } from "react";
-import useAuth from "../../context/AuthContext";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../context/AuthContext.jsx";
 
 export default function Profile() {
     const { user, logoutUser } = useAuth()
-    const navigate = useNavigate()
 
     return (
         <div className="center">

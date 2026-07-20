@@ -1,18 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-import { useDispatch, useSelector } from 'react-redux'
-import { setPosition } from '../store/MapDataSlice'
-import useMapData from '../context/MapDataContext'
-import { Link, useNavigate } from 'react-router-dom'
-import useAuth from '../context/AuthContext'
-import  AddReportComp from '../components/AddReportComp'
-import { MarkerIcon } from '../components/MarkerIcon'
+import useMapData from '../context/MapDataContext.jsx'
+import { useNavigate } from 'react-router-dom'
+import useAuth from '../context/AuthContext.jsx'
+import  AddReportComp from '../components/AddReportComp.jsx'
+import { MarkerIcon } from '../components/MarkerIcon.jsx'
 
 export default function Home() {
     const { position, loading, updatePos, users, reports } = useMapData()
     const navigate = useNavigate()
     const { user } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
+    const [locationError, setLocationError] = useState(null)
     const map = useRef()
 
     const centerMap = () => {
@@ -20,24 +19,37 @@ export default function Home() {
 
     }
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(updatePos)
-    }, [])
-    useEffect(() => {
         console.log(position)
     }, [position])
 
     useEffect(() => {
         if (!user) navigate('/login')
         else {
-        const checkLocation = setInterval(() => {
-            navigator.geolocation.getCurrentPosition(updatePos)
-        }, 5000)
-        return () => clearInterval(checkLocation)
+            if (!navigator.geolocation) {
+                setLocationError('Geolocation is not supported by this browser')
+                return
+            }
+
+            const watchId = navigator.geolocation.watchPosition(
+                updatePos,
+                (error) => {
+                    console.error(error)
+                    setLocationError(error.message || 'Unable to get your location')
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 1000,
+                    timeout: 10000,
+                },
+            )
+            return () => navigator.geolocation.clearWatch(watchId)
         }
-    })
+    }, [navigate, updatePos, user])
 
 
+    if (locationError) return locationError
     if (loading) return 'Loading'
+    if (!position) return 'Unable to get your location'
     return <>
         <div>
             <MapContainer ref={map} className='map-container' center={[position.latitude, position.longitude]} zoom={13} scrollWheelZoom={false}>
@@ -50,12 +62,12 @@ export default function Home() {
                     </Popup>
                 </Marker>
                 {users.map(user => (
-                    <Marker key={user.id} icon={MarkerIcon} position={[user.latitude, user.longitude]}>
+                    <Marker key={user.user_id} icon={MarkerIcon} position={[user.lat, user.lng]}>
 
                     </Marker>
                 ))}
                 {reports.map(report => (
-                    <Marker key={report} position={[report.latitude, report.longitude]}>
+                    <Marker key={report.id} position={[report.latitude, report.longitude]}>
                     <Popup>
                         {report.report_type}
                     </Popup>

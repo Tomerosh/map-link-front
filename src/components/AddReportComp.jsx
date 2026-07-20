@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AddReport } from "../api/mapData";
+import { AddReport } from "../api/mapData.js";
 
 const AddReportComp = ({ latitude, longitude }) => {
   const [loading, setLoading] = useState(false);

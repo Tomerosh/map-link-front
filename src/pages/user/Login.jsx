@@ -1,5 +1,5 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom"
-import useAuth from "../../context/AuthContext"
+import { Link, useNavigate } from "react-router-dom"
+import useAuth from "../../context/AuthContext.jsx"
 import { useEffect } from "react"
 
 export default function Login() {
@@ -19,7 +19,7 @@ export default function Login() {
         if (user) {
             navigate('/')
         }
-    })
+    }, [navigate, user])
     return (
         <div className="center">
 
