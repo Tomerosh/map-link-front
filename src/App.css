@@ -10,10 +10,20 @@
 }
 
 .report-toggle {
+  display: flex;
   position: absolute;
   left: 18px;
   bottom: 18px;
   z-index: 10;
+  height: 50px;
+  width: 50px;
+  align-items: center;
+  border-radius: 25px;
+  color: #fad73c;
+  background-color: #fff;
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: .3s;
 }
 
 .report-panel {
