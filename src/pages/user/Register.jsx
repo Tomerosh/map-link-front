@@ -16,13 +16,13 @@ export default function Register() {
         <div className="center">
 
         <form className="login-form" onSubmit={handleSubmit}>
-            <h1>{t("register")}</h1>
+            <h1>Register</h1>
             <label className="form-label" htmlFor="username">Username:</label>
             <input className="form-input" name='username' type="text" placeholder="username"/>
             <label className="form-label" htmlFor="password">Password:</label>
             <input className="form-input" name="password" type="password" placeholder="password"/>
             <button>Register</button>
-            <span>Already signed up? <Link to="/user/login" className="link">Login</Link></span>
+            <span>Already signed up? <Link to="/login" className="link">Login</Link></span>
         </form>
         </div>
     )

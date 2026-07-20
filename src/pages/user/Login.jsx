@@ -1,8 +1,10 @@
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import useAuth from "../../context/AuthContext"
+import { useEffect } from "react"
 
 export default function Login() {
-    const { loginUser } = useAuth()
+    const { user, loginUser } = useAuth()
+    const navigate = useNavigate()
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -13,6 +15,11 @@ export default function Login() {
         }
     }
 
+    useEffect(() => {
+        if (user) {
+            navigate('/')
+        }
+    })
     return (
         <div className="center">
 
@@ -23,7 +30,7 @@ export default function Login() {
             <label className="form-label" htmlFor="password">Password:</label>
             <input className="form-input" name="password" type="password" placeholder="password"/>
             <button>Login</button>
-            <span>Don't have an account? <Link to="/user/register" className="link">Register</Link></span>
+            <span>Don't have an account? <Link to="/register" className="link">Register</Link></span>
         </form>
         </div>
     )
