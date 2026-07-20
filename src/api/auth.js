@@ -7,9 +7,8 @@ export function register({ username, password, full_name }) {
   })
 }
 
-export function login({ username, password }) {
-  console.log(username, password)
-  return api.post('/api/v1/auth/login', { username, password })
+export function login(creds) {
+  return api.post('/api/v1/auth/login', creds )
 }
 
 export function logout() {

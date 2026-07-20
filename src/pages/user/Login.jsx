@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import useAuth from "../../context/AuthContext"
 
 export default function Login() {

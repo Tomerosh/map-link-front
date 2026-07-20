@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { logout, login, register } from "../api/auth.js"
 import * as authApi from '../api/auth.js'
 
 const AuthContext = createContext()
@@ -25,10 +24,12 @@ export function AuthProvider({ children }) {
 
         init()
     }, [])
-    const loginUser = async (credentials) => {
-        const data = await authApi.login(credentials)
+    const loginUser = async (username, password) => {
+        const creds = new FormData()
+        creds.append("username", username)
+        creds.append("password", password)
+        const data = await authApi.login(creds)
         setUser(data.user)
-        console.log(data)
         return data.user
         // alert('Username or Password are incorrect!')
     }
