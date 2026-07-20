@@ -1,12 +1,14 @@
 import useAuth from "../../context/useAuth.js";
 import { useNavigate } from "react-router-dom";
 import useMapData from "../../context/useMapData.js";
+import { useState } from "react";
 
 export default function Profile() {
-    const { user, logoutUser } = useAuth()
+    const { user, logoutUser, updateUserSettings } = useAuth()
     const { ICONS, userIcon, updateUserIcon } = useMapData()
-    // const iconClass = () => `big-icon ${userIcon === }`
     const navigate = useNavigate()
+    const [settingsError, setSettingsError] = useState('')
+    const [isSavingSettings, setIsSavingSettings] = useState(false)
     const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ')
     const profileRows = [
         ['Username', user?.username],
@@ -17,6 +19,22 @@ export default function Profile() {
     async function handleLogout() {
         await logoutUser()
         navigate('/login')
+    }
+
+    async function handleIncomingMessagesChange(event) {
+        const allowIncomingMessages = event.target.checked
+        setSettingsError('')
+
+        try {
+            setIsSavingSettings(true)
+            await updateUserSettings({
+                allow_incoming_messages: allowIncomingMessages,
+            })
+        } catch (error) {
+            setSettingsError(error.message || 'Unable to save settings.')
+        } finally {
+            setIsSavingSettings(false)
+        }
     }
 
     return (
@@ -40,6 +58,22 @@ export default function Profile() {
                         </div>
                     ))}
                 </dl>
+                <section className="settings-section">
+                    <div>
+                        <h3>Messages</h3>
+                        <p>Allow nearby users to start conversations with you.</p>
+                    </div>
+                    <label className="toggle-row">
+                        <span>Incoming messages</span>
+                        <input
+                            type="checkbox"
+                            checked={Boolean(user?.allow_incoming_messages)}
+                            disabled={isSavingSettings}
+                            onChange={handleIncomingMessagesChange}
+                        />
+                    </label>
+                    {settingsError ? <p className="form-error">{settingsError}</p> : null}
+                </section>
                 <div className="icon-box">
                     {Object.keys(ICONS).map((name) => (
                         <img key={name}

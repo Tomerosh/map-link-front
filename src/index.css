@@ -241,6 +241,40 @@ a:hover {
   overflow-wrap: anywhere;
 }
 
+.settings-section {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  background: var(--surface-soft);
+  border-radius: var(--radius);
+}
+
+.settings-section p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.toggle-row {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--text-h);
+  font-weight: 700;
+}
+
+.toggle-row input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.toggle-row input:disabled {
+  cursor: wait;
+}
+
 .logout-button {
   min-height: 44px;
   display: inline-flex;

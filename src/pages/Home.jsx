@@ -74,9 +74,13 @@ export default function Home() {
                         <Popup>
                             <div className="user-popup">
                                 <span>User nearby</span>
-                                <span className={user.allow_incoming_messages ? 'message-status available' : 'message-status unavailable'}>
-                                    {user.allow_incoming_messages ? 'Messages enabled' : 'Messages disabled'}
-                                </span>
+                                <button
+                                    className="message-action"
+                                    disabled={!user.allow_incoming_messages}
+                                    type="button"
+                                >
+                                    {user.allow_incoming_messages ? 'Message user' : 'Messages disabled'}
+                                </button>
                             </div>
                         </Popup>
                     </Marker>

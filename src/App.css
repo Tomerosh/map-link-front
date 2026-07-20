@@ -162,17 +162,20 @@
   fill: rgb(152, 152, 152);
 }
 
-.message-status {
-  font-size: 0.82rem;
+.message-action {
+  min-height: 34px;
+  padding: 7px 10px;
+  color: #ffffff;
+  background: var(--accent);
+  border-radius: var(--radius);
   font-weight: 700;
+  cursor: pointer;
 }
 
-.message-status.available {
-  color: #15803d;
-}
-
-.message-status.unavailable {
+.message-action:disabled {
   color: var(--muted);
+  background: var(--surface-soft);
+  cursor: not-allowed;
 }
 
 .delete-report {
