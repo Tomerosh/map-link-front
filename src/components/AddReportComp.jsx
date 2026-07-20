@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { AddReport } from "../api/mapData.js";
-
+import policeIcon from "../assets/police-pin.svg"
 const AddReportComp = ({ latitude, longitude }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const reportTypes = [
-    "POLICE",
+    {"POLICE": policeIcon},
     "FLOODING",
     "ROAD_DANGER",
     "TRAFFIC_JAM",
