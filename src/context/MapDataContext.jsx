@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import useAuth from "./AuthContext";
 
 const MapDataContext = createContext()
 
@@ -11,7 +12,7 @@ export function MapDataProvider({ children }) {
     const [users, setUsers] = useState([])
     const [reports, setReports] = useState([])
     const [loading, setLoading] = useState(true)
-
+    const { user } = useAuth()
     const updatePos = (e) => {
         setPosition({
             latitude: e.coords.latitude,
@@ -21,6 +22,35 @@ export function MapDataProvider({ children }) {
         }
         
     }
++
+   useEffect(() => {
+        if (!position) return;
+        if (!user) return
+        const getUserDataSocket = () => {    
+            const ws = new WebSocket('ws://127.0.0.1:8000/location/ws');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({ lat: position.latitude, lng: position.longitude }));
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === "nearby_map_data") {
+                    setUsers(data.users || []);
+                    setReports(data.reports || []);
+                }
+            };
+
+            return () => {
+                ws.close();
+            };
+        };
+
+        const cleanup = getUserDataSocket();
+        
+        return cleanup;
+
+    }, [position]);
+
     return (
         <>
             <MapDataContext.Provider value={{ position, updatePos, loading }}>

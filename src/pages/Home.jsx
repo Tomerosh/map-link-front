@@ -7,8 +7,6 @@ import { Link } from 'react-router-dom'
 
 export default function Home() {
     const { position, loading, updatePos } = useMapData()
-    // const position = useSelector(state => state.position)
-    // const dispatch = useDispatch()
 
     const map = useRef()
 
