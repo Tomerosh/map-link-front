@@ -91,6 +91,24 @@
   fill: currentColor;
 }
 
+.map-privacy-status {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  z-index: 10;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  color: var(--text-h);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-weight: 750;
+  backdrop-filter: blur(10px);
+}
+
 .leaflet-control {
   z-index: 5 !important;
 }

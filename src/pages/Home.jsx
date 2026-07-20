@@ -112,6 +112,11 @@ export default function Home() {
                     </Marker>
                 ))}
             </MapContainer>
+            {user.hide_me ? (
+                <div className="map-privacy-status">
+                    Hidden on map
+                </div>
+            ) : null}
             <button className="report-toggle" onClick={() => setShowReportForm(!showReportForm)}>
                 {showReportForm ? "Hide Report Menu" : "Add Report"}
             </button>

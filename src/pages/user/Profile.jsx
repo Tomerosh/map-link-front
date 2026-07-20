@@ -22,14 +22,23 @@ export default function Profile() {
     }
 
     async function handleIncomingMessagesChange(event) {
-        const allowIncomingMessages = event.target.checked
+        await saveSettings({
+            allow_incoming_messages: event.target.checked,
+        })
+    }
+
+    async function handleHideMeChange(event) {
+        await saveSettings({
+            hide_me: event.target.checked,
+        })
+    }
+
+    async function saveSettings(payload) {
         setSettingsError('')
 
         try {
             setIsSavingSettings(true)
-            await updateUserSettings({
-                allow_incoming_messages: allowIncomingMessages,
-            })
+            await updateUserSettings(payload)
         } catch (error) {
             setSettingsError(error.message || 'Unable to save settings.')
         } finally {
@@ -70,6 +79,15 @@ export default function Profile() {
                             checked={Boolean(user?.allow_incoming_messages)}
                             disabled={isSavingSettings}
                             onChange={handleIncomingMessagesChange}
+                        />
+                    </label>
+                    <label className="toggle-row">
+                        <span>Hide me on map</span>
+                        <input
+                            type="checkbox"
+                            checked={Boolean(user?.hide_me)}
+                            disabled={isSavingSettings}
+                            onChange={handleHideMeChange}
                         />
                     </label>
                     {settingsError ? <p className="form-error">{settingsError}</p> : null}
