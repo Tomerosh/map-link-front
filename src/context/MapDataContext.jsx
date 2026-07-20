@@ -16,7 +16,8 @@ export function MapDataProvider({ children }) {
     const updatePos = (e) => {
         setPosition({
             latitude: e.coords.latitude,
-             longitude: e.coords.longitude})
+            longitude: e.coords.longitude
+        })
         if (loading) {
             setLoading(false)
         }
@@ -41,20 +42,15 @@ export function MapDataProvider({ children }) {
                 }
             };
 
-            return () => {
-                ws.close();
-            };
-        };
+            const cleanup = getUserDataSocket();
 
-        const cleanup = getUserDataSocket();
-        
-        return cleanup;
+            return cleanup;
 
-    }, [position]);
+        }, [position]);
 
     return (
         <>
-            <MapDataContext.Provider value={{ position, updatePos, loading }}>
+            <MapDataContext.Provider value={{ position, updatePos, loading, users }}>
                 {children}
             </MapDataContext.Provider>
         </>
