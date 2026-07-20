@@ -1,8 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
-import Layout from '../pages/Layout'
-import Home from '../pages/Home'
-import NotFound from '../pages/NotFound'
+import Layout from './pages/Layout'
+import Home from './pages/Home'
+import NotFound from './pages/NotFound'
+import Login from './pages/user/Login'
+import Register from './pages/user/Register'
 
 const router = createBrowserRouter([
   {
@@ -12,11 +14,9 @@ const router = createBrowserRouter([
       {index:true, element:<Home/>},
       // {path:'search', element:<Search/>},
       // {path:'fav', element:<Favorites/>},
-      // {path: "user", element: <User/>, children:[
-        // {path:'login', element:<Login/>},
-        // {path:'register', element:<Register/>},
-        // {path:'profile', element:<Profile/>}
-      // ]},
+      {path:'login', element:<Login/>},
+      {path:'register', element:<Register/>},
+      // {path:'profile', element:<Profile/>}
       {path:'*', element:<NotFound/>},
     ]
   }])

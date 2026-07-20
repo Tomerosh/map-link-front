@@ -3,17 +3,28 @@
 .map-container {
   height: 100vh;
   width: 100vw;
-  max-height: 100%;
 }
 
 .center-map {
+  background-color: aliceblue;
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 25px;
+  right: 25px;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  border-radius: 16px;
+  cursor: pointer;
 }
 
 .center-map svg {
-  fill: white;
-  width: 10%;
-  height: 10%;
+  transition-property: fill;
+  transition-duration: .2s;
 }
+.center-map:hover svg {
+  fill: rgb(105, 105, 105);
+}
+
+.leaflet-control { z-index: 0 !important}
+.leaflet-pane { z-index: 0 !important}
+.leaflet-top, .leaflet-bottom {z-index: 0 !important}
