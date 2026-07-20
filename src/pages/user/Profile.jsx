@@ -1,6 +1,6 @@
-import useAuth from "../../context/AuthContext.jsx";
+import useAuth from "../../context/useAuth.js";
 import { useNavigate } from "react-router-dom";
-import useMapData from "../../context/MapDataContext.jsx";
+import useMapData from "../../context/useMapData.js";
 
 export default function Profile() {
     const { user, logoutUser } = useAuth()

@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-import useMapData from '../context/MapDataContext.jsx'
+import useMapData from '../context/useMapData.js'
 import { useNavigate } from 'react-router-dom'
-import useAuth from '../context/AuthContext.jsx'
+import useAuth from '../context/useAuth.js'
 import  AddReportComp from '../components/AddReportComp.jsx'
-import { MarkerIcon } from '../components/MarkerIcon.jsx'
 import DeleteReport from '../components/DeleteReport.jsx'
 import L from 'leaflet';
 import UserMarker from '../components/UserMarker.jsx'
+import mapPin from '../assets/map-pin.svg'
 
 
 export default function Home() {
-    const { position, loading, updatePos, users, reports, userIcon, ICONS } = useMapData()
+    const { position, loading, updatePos, users, reports, removeReport, userIcon, ICONS } = useMapData()
     const navigate = useNavigate()
     const { user, displayName } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
@@ -24,14 +24,16 @@ export default function Home() {
         popupAnchor:  [-0, -0],
         iconSize: [32,45], 
     });
+    const nearbyUserIcon = new L.Icon({
+        iconUrl: mapPin,
+        iconRetinaUrl: mapPin,
+        popupAnchor: [-0, -0],
+        iconSize: [30, 42],
+    });
     const centerMap = () => {
         if (map.current && !loading) map.current.flyTo([position.latitude, position.longitude])
 
     }
-    useEffect(() => {
-        console.log(position)
-    }, [position])
-
     useEffect(() => {
         if (!user) navigate('/login')
         else {
@@ -68,15 +70,22 @@ export default function Home() {
                 />
                 <UserMarker MarkerIcon={MarkerIcon} displayName={displayName} position={position} first_name={user.first_name}/>
                 {users.map(user => (
-                    <Marker key={user.user_id} icon={MarkerIcon} position={[user.lat, user.lng]}>
-
+                    <Marker key={user.user_id} icon={nearbyUserIcon} position={[user.lat, user.lng]}>
+                        <Popup>
+                            <div className="user-popup">
+                                <span>User nearby</span>
+                                <span className={user.allow_incoming_messages ? 'message-status available' : 'message-status unavailable'}>
+                                    {user.allow_incoming_messages ? 'Messages enabled' : 'Messages disabled'}
+                                </span>
+                            </div>
+                        </Popup>
                     </Marker>
                 ))}
                 {reports.map(report => (
                     <Marker key={report.id} position={[report.latitude, report.longitude]}>
                     <Popup>
                         {report.report_type}
-                          <DeleteReport report_id={report.id} />
+                          {report.user_id === user.id && <DeleteReport report_id={report.id} onDeleted={removeReport} />}
                     </Popup>
                     </Marker>
                 ))}

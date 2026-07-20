@@ -1,11 +1,14 @@
 import { Link, useNavigate } from "react-router-dom"
-import useAuth from "../../context/AuthContext.jsx"
-import { useEffect } from "react"
+import useAuth from "../../context/useAuth.js"
+import { useEffect, useState } from "react"
 
 export default function Register() {
     const { user, registerUser } = useAuth()
     const navigate = useNavigate()
-    function handleSubmit(e) {
+    const [errorMessage, setErrorMessage] = useState('')
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    async function handleSubmit(e) {
         e.preventDefault()
         const data = {}
         for (let field of e.target){
@@ -13,10 +16,16 @@ export default function Register() {
                 data[field.name] = field.value
             }
         }
-        registerUser(data)
-        // if (username && password) {
-        //     registerUser(username, password)
-        // }
+
+        setErrorMessage('')
+        try {
+            setIsSubmitting(true)
+            await registerUser(data)
+        } catch (error) {
+            setErrorMessage(error.message || 'Registration failed.')
+        } finally {
+            setIsSubmitting(false)
+        }
     }
     useEffect(() => {
         if (user) {
@@ -38,7 +47,8 @@ export default function Register() {
             <input className="form-input" name='username' type="text" placeholder="username"/>
             <label className="form-label" htmlFor="password">Password:</label>
             <input className="form-input" name="password" type="password" placeholder="password"/>
-            <button>Register</button>
+            {errorMessage ? <p className="form-error">{errorMessage}</p> : null}
+            <button disabled={isSubmitting}>{isSubmitting ? 'Registering...' : 'Register'}</button>
             <span>Already signed up? <Link to="/login" className="link">Login</Link></span>
         </form>
         </div>

@@ -161,3 +161,37 @@
 .user-popup .icon:hover{
   fill: rgb(152, 152, 152);
 }
+
+.message-status {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.message-status.available {
+  color: #15803d;
+}
+
+.message-status.unavailable {
+  color: var(--muted);
+}
+
+.delete-report {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.delete-report button {
+  min-height: 34px;
+  padding: 7px 10px;
+  color: #ffffff;
+  background: var(--danger);
+  border-radius: var(--radius);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.delete-report button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
