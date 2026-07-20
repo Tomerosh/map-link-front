@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
         // alert('Username or Password are incorrect!')
     }
 
-    const registerUser = async  (payload) => {
+    const registerUser = async (payload) => {
         const data = await authApi.register(payload)
         setUser(data.user)
         return data.user

@@ -1,10 +1,7 @@
 import api from './client.js'
 
-export function register({ username, password, full_name }) {
-  return api.post('/api/v1/auth/register', {
-    username,
-    password
-  })
+export function register(payload) {
+  return api.post('/api/v1/auth/register', payload)
 }
 
 export function login(creds) {
