@@ -4,16 +4,24 @@ import useMapData from '../context/MapDataContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import useAuth from '../context/AuthContext.jsx'
 import  AddReportComp from '../components/AddReportComp.jsx'
-import { MarkerIcon } from '../components/MarkerIcon.jsx'
+import L from 'leaflet';
+import marker from "../assets/car-pin.svg"
+
 
 export default function Home() {
-    const { position, loading, updatePos, users, reports } = useMapData()
+    const { position, loading, updatePos, users, reports, userIcon, ICONS } = useMapData()
     const navigate = useNavigate()
     const { user } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
     const [locationError, setLocationError] = useState(null)
     const map = useRef()
 
+    const MarkerIcon = new L.Icon({
+        iconUrl: ICONS[userIcon],
+        iconRetinaUrl: ICONS[userIcon],
+        popupAnchor:  [-0, -0],
+        iconSize: [32,45], 
+    });
     const centerMap = () => {
         if (map.current && !loading) map.current.flyTo([position.latitude, position.longitude])
 
