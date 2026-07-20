@@ -5,15 +5,14 @@ import { setPosition } from '../store/MapDataSlice'
 import useMapData from '../context/MapDataContext'
 import { Link, useNavigate } from 'react-router-dom'
 import useAuth from '../context/AuthContext'
+import  AddReportComp from '../components/AddReportComp'
 import { MarkerIcon } from '../components/MarkerIcon'
 
 export default function Home() {
     const { position, loading, updatePos, users } = useMapData()
     const navigate = useNavigate()
     const { user } = useAuth()
-    // const position = useSelector(state => state.position)
-    // const dispatch = useDispatch()
-
+    const [showReportForm, setShowReportForm] = useState(false)
     const map = useRef()
 
     const centerMap = () => {
@@ -56,6 +55,16 @@ export default function Home() {
                     </Marker>
                 ))}
             </MapContainer>
+            <button onClick={() => setShowReportForm(!showReportForm)}>
+                {showReportForm ? "Hide Report Menu" : "Add Report"}
+            </button>
+
+            {showReportForm && (
+                <AddReportComp 
+                    latitude={position.latitude} 
+                    longitude={position.longitude} 
+                />
+            )}
             <div className='center-map' onClick={centerMap}>
                 <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                     <g id="Layer_2" data-name="Layer 2">

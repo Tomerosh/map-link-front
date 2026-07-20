@@ -21,30 +21,25 @@ export function MapDataProvider({ children }) {
         if (loading) {
             setLoading(false)
         }
-
+        
     }
-    +
-        useEffect(() => {
-            if (!position) return;
-            if (!user) return
-            const getUserDataSocket = () => {
-                const ws = new WebSocket('ws://localhost:8000/api/v1/location/ws');
-                ws.onopen = () => {
-                    ws.send(JSON.stringify({ lat: position.latitude, lng: position.longitude }));
-                };
++
+   useEffect(() => {
+        if (!position) return;
+        if (!user) return
+        const getUserDataSocket = () => {    
+            const ws = new WebSocket('ws://localhost:8000/api/v1/location/ws');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({ lat: position.latitude, lng: position.longitude }));
+            };
 
-                ws.onmessage = (event) => {
-                    const data = JSON.parse(event.data);
-                    if (data.type === "nearby_map_data") {
-                        setUsers(data.users || []);
-                        setReports(data.reports || []);
-                    }
-                    setUsers([{id: 0, latitude: 32.5, longitude: 32}])
-                };
-
-                return () => {
-                    ws.close();
-                };
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === "nearby_map_data") {
+                    setUsers(data.users || []);
+                    setReports(data.reports || []);
+                    console.log(data)
+                }
             };
 
             const cleanup = getUserDataSocket();
