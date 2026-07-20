@@ -8,6 +8,7 @@ import DeleteReport from '../components/DeleteReport.jsx'
 import L from 'leaflet';
 import UserMarker from '../components/UserMarker.jsx'
 import mapPin from '../assets/map-pin.svg'
+import { createDirectConversation } from '../api/conversations.js'
 
 
 export default function Home() {
@@ -16,6 +17,8 @@ export default function Home() {
     const { user, displayName } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
     const [locationError, setLocationError] = useState(null)
+    const [messageError, setMessageError] = useState('')
+    const [startingChatUserId, setStartingChatUserId] = useState(null)
     const map = useRef()
 
     const MarkerIcon = new L.Icon({
@@ -34,6 +37,19 @@ export default function Home() {
         if (map.current && !loading) map.current.flyTo([position.latitude, position.longitude])
 
     }
+    async function handleStartConversation(otherUserId) {
+        try {
+            setMessageError('')
+            setStartingChatUserId(otherUserId)
+            const conversation = await createDirectConversation(otherUserId)
+            navigate(`/messages/${conversation.id}`)
+        } catch (error) {
+            setMessageError(error.message || 'Unable to start conversation.')
+        } finally {
+            setStartingChatUserId(null)
+        }
+    }
+
     useEffect(() => {
         if (!user) navigate('/login')
         else {
@@ -76,11 +92,13 @@ export default function Home() {
                                 <span>User nearby</span>
                                 <button
                                     className="message-action"
-                                    disabled={!user.allow_incoming_messages}
+                                    disabled={!user.allow_incoming_messages || startingChatUserId === user.user_id}
+                                    onClick={() => handleStartConversation(user.user_id)}
                                     type="button"
                                 >
-                                    {user.allow_incoming_messages ? 'Message user' : 'Messages disabled'}
+                                    {buttonText(user, startingChatUserId)}
                                 </button>
+                                {messageError ? <p className="popup-error">{messageError}</p> : null}
                             </div>
                         </Popup>
                     </Marker>
@@ -121,4 +139,10 @@ export default function Home() {
             </button>
         </div>
     </>
+}
+
+function buttonText(user, startingChatUserId) {
+    if (!user.allow_incoming_messages) return 'Messages disabled'
+    if (startingChatUserId === user.user_id) return 'Opening...'
+    return 'Message user'
 }
