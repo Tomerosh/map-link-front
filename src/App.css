@@ -115,3 +115,49 @@
     grid-template-columns: 1fr;
   }
 }
+
+.icon-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+}
+
+.big-icon {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.big-icon.active{
+  background-color: rgb(255, 191, 182);
+  border-radius: 25px;
+  border-width: 3px;
+}
+
+.user-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap:10px;
+}
+
+.user-detail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+.user-popup hr{
+  width: 100%;
+}
+.user-popup .icon{
+  cursor: pointer;
+  transition-property: fill;
+  transition-duration: .3s;
+}
+.user-popup .icon:hover{
+  fill: rgb(152, 152, 152);
+}

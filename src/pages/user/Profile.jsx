@@ -1,8 +1,11 @@
 import useAuth from "../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import useMapData from "../../context/MapDataContext.jsx";
 
 export default function Profile() {
     const { user, logoutUser } = useAuth()
+    const { ICONS, userIcon, updateUserIcon } = useMapData()
+    // const iconClass = () => `big-icon ${userIcon === }`
     const navigate = useNavigate()
     const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ')
     const profileRows = [
@@ -37,7 +40,13 @@ export default function Profile() {
                         </div>
                     ))}
                 </dl>
-
+                <div className="icon-box">
+                    {Object.keys(ICONS).map((name) => (
+                        <img key={name}
+                            onClick={() => updateUserIcon(name)} src={ICONS[name]} alt={name} className={`big-icon ${userIcon === name? 'active':''}`} />
+                    )
+                    )}
+                </div>
                 <button className="logout-button" onClick={handleLogout}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="icon ">
                         <path  strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />

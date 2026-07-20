@@ -6,14 +6,24 @@ import useAuth from '../context/AuthContext.jsx'
 import  AddReportComp from '../components/AddReportComp.jsx'
 import { MarkerIcon } from '../components/MarkerIcon.jsx'
 import DeleteReport from '../components/DeleteReport.jsx'
+import L from 'leaflet';
+import UserMarker from '../components/UserMarker.jsx'
+
+
 export default function Home() {
-    const { position, loading, updatePos, users, reports } = useMapData()
+    const { position, loading, updatePos, users, reports, userIcon, ICONS } = useMapData()
     const navigate = useNavigate()
-    const { user } = useAuth()
+    const { user, displayName } = useAuth()
     const [showReportForm, setShowReportForm] = useState(false)
     const [locationError, setLocationError] = useState(null)
     const map = useRef()
 
+    const MarkerIcon = new L.Icon({
+        iconUrl: ICONS[userIcon],
+        iconRetinaUrl: ICONS[userIcon],
+        popupAnchor:  [-0, -0],
+        iconSize: [32,45], 
+    });
     const centerMap = () => {
         if (map.current && !loading) map.current.flyTo([position.latitude, position.longitude])
 
@@ -52,15 +62,11 @@ export default function Home() {
     if (!position) return <main className="status-screen">Unable to get your location</main>
     return <>
         <div className="map-page">
-            <MapContainer ref={map} className='map-container' center={[position.latitude, position.longitude]} zoom={13} scrollWheelZoom={false}>
+            <MapContainer ref={map} className='map-container' center={[position.latitude, position.longitude]} zoom={18} scrollWheelZoom={false}>
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker icon={MarkerIcon} position={[position.latitude, position.longitude]}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
+                <UserMarker MarkerIcon={MarkerIcon} displayName={displayName} position={position} first_name={user.first_name}/>
                 {users.map(user => (
                     <Marker key={user.user_id} icon={MarkerIcon} position={[user.lat, user.lng]}>
 

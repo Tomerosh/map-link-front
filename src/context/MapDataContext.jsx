@@ -1,6 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import useAuth from "./AuthContext.jsx";
 import { API_BASE_URL } from "../api/client.js";
+import bicycle from "../assets/bicycle-pin.svg"
+import scooter from "../assets/scooter-pin.svg"
+import car from "../assets/car-pin.svg"
+import jeep from "../assets/jeep-pin.svg"
+import taxi from "../assets/taxi-pin.svg"
+import bus from "../assets/bus-pin.svg"
+import truck from "../assets/truck-pin.svg"
 
 const MapDataContext = createContext()
 const LOCATION_UPDATE_THRESHOLD_METERS = 5
@@ -12,6 +19,17 @@ export default function useMapData() {
 }
 
 export function MapDataProvider({ children }) {
+    const ICONS = {
+        bicycle: bicycle,
+        scooter: scooter,
+        car: car,
+        jeep: jeep,
+        taxi: taxi,
+        bus: bus,
+        truck: truck
+    }
+    const localUserIcon = localStorage.getItem('userIcon')
+    const [userIcon, setUserIcon] = useState(localUserIcon || 'car')
     const [position, setPosition] = useState(null)
     const [users, setUsers] = useState([])
     const [reports, setReports] = useState([])
@@ -19,6 +37,12 @@ export function MapDataProvider({ children }) {
     const { user } = useAuth()
     const wsRef = useRef(null)
     const lastKnownPositionRef = useRef(null)
+
+    function updateUserIcon(iconName) {
+        setUserIcon(() => {
+            localStorage.setItem("userIcon", iconName)
+            return iconName})
+    }
 
     const updatePos = useCallback((e) => {
         const nextPosition = {
@@ -104,7 +128,7 @@ export function MapDataProvider({ children }) {
 
     return (
         <>
-            <MapDataContext.Provider value={{ position, updatePos, loading, users, reports }}>
+            <MapDataContext.Provider value={{ position, updatePos, loading, users, reports, userIcon, updateUserIcon, ICONS }}>
                 {children}
             </MapDataContext.Provider>
         </>

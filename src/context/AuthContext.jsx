@@ -10,6 +10,8 @@ export default function useAuth() {
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    
+    const displayName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.username
 
     useEffect(() => {
         async function init() {
@@ -49,7 +51,7 @@ export function AuthProvider({ children }) {
     }
     return (
         <>{loading ? "Loading.." :
-            <AuthContext.Provider value={{ user, loginUser, logoutUser, registerUser }}>
+            <AuthContext.Provider value={{ user, loginUser, logoutUser, registerUser, displayName }}>
                 {children}
             </AuthContext.Provider>}
         </>
