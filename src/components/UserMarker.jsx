@@ -8,7 +8,6 @@ export default function UserMarker({ MarkerIcon, position, displayName, user, se
     const [startingChatUserId, setStartingChatUserId] = useState(null)
     const navigate = useNavigate()
     async function handleStartConversation(otherUserId) {
-        console.log('TEST')
         try {
             setMessageError('')
             setStartingChatUserId(otherUserId)
@@ -21,11 +20,6 @@ export default function UserMarker({ MarkerIcon, position, displayName, user, se
         }
     }
 
-    useEffect(() => {
-    console.log(user)
-    console.log(position)
-
-    })
     return <Marker icon={MarkerIcon} position={[position?.latitude? position.latitude: user.lat, position?.longitude? position.longitude: user.lng]}>
         <Popup>
             <div className='user-popup'>

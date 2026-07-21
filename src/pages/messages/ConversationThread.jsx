@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
-import useAuth from "../../context/useAuth.js";
+import useAuth from "../../hooks/useAuth.js";
 import {
     getConversation,
     listMessages,

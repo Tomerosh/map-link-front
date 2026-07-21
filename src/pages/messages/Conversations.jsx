@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useAuth from "../../context/useAuth.js";
+import useAuth from "../../hooks/useAuth.js";
 import { listConversations } from "../../api/conversations.js";
 
 const CONVERSATION_REFRESH_INTERVAL_MS = 5000

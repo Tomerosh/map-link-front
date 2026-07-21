@@ -1,6 +1,6 @@
-import useAuth from "../../context/useAuth.js";
+import useAuth from "../../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
-import useMapData from "../../context/useMapData.js";
+import useMapData from "../../hooks/useMapData.js";
 import { useState } from "react";
 
 export default function Profile() {

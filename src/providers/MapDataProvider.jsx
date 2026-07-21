@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import useAuth from "./useAuth.js";
+import useAuth from "../hooks/useAuth.js";
 import { API_BASE_URL } from "../api/client.js";
-import MapDataContext from "./mapDataContextValue.js";
+import MapDataContext from "../context/mapDataContext.js";
 import bicycle from "../assets/bicycle-pin.svg"
 import scooter from "../assets/scooter-pin.svg"
 import car from "../assets/car-pin.svg"
@@ -9,12 +9,16 @@ import jeep from "../assets/jeep-pin.svg"
 import taxi from "../assets/taxi-pin.svg"
 import bus from "../assets/bus-pin.svg"
 import truck from "../assets/truck-pin.svg"
+import { DEMO_REPORTS, DEMO_USERS } from "../api/demo.js";
 
 const LOCATION_UPDATE_THRESHOLD_METERS = 5
 const MAP_REFRESH_INTERVAL_MS = 5000
 const LOCATION_WS_URL = `${API_BASE_URL.replace(/^http/, "ws")}/api/v1/location/ws`
 
+
+
 export function MapDataProvider({ children }) {
+    const DEMO = true
     const ICONS = {
         bicycle: bicycle,
         scooter: scooter,
@@ -84,11 +88,14 @@ export function MapDataProvider({ children }) {
                 setUsers(data.users || [])
                 setReports(data.reports || [])
             }
-            console.log(data)
-
+            if (DEMO) {
+                setUsers(DEMO_USERS) 
+                setReports(DEMO_REPORTS)
+            }
             if (data.type === "auth_error") {
                 console.error("Location websocket auth error:", data.message)
             }
+            console.log(data)
         }
 
         ws.onerror = (event) => {

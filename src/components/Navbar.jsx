@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom"
 import './Navbar.css';
-import useAuth from "../context/useAuth.js";
+import useAuth from "../hooks/useAuth.js";
 import appIcon from "../assets/icon.png"
 
 export default function Navbar() {

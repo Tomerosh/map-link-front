@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-import useMapData from '../context/useMapData.js'
+import useMapData from '../hooks/useMapData.js'
 import { useNavigate } from 'react-router-dom'
-import useAuth from '../context/useAuth.js'
+import useAuth from '../hooks/useAuth.js'
 import  AddReportComp from '../components/AddReportComp.jsx'
 import DeleteReport from '../components/DeleteReport.jsx'
 import L from 'leaflet';
@@ -17,19 +17,13 @@ export default function Home() {
     const [showReportForm, setShowReportForm] = useState(false)
     const [locationError, setLocationError] = useState(null)
     const map = useRef()
-
+    // const randIcon = Math.floor(Math.random())*ICONS.length
     const displayName = (usr) => [usr?.first_name, usr?.last_name].filter(Boolean).join(' ') || usr?.username
     const MarkerIcon = new L.Icon({
         iconUrl: ICONS[userIcon],
         iconRetinaUrl: ICONS[userIcon],
         popupAnchor:  [-0, -0],
         iconSize: [32,45], 
-    });
-    const nearbyUserIcon = new L.Icon({
-        iconUrl: mapPin,
-        iconRetinaUrl: mapPin,
-        popupAnchor: [-0, -0],
-        iconSize: [30, 42],
     });
     const centerMap = () => {
         if (map.current && !loading) map.current.flyTo([position.latitude, position.longitude])
@@ -71,9 +65,16 @@ export default function Home() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <UserMarker MarkerIcon={MarkerIcon} displayName={displayName(user)} position={position} user={user} self={true}/>
-                {users.map(userOther => (
-                    <UserMarker MarkerIcon={nearbyUserIcon} displayName={displayName(userOther)} position={userOther.position} user={userOther}/>
-                ))}
+                {users.map((userOther, i) => {
+                    
+                    const nearbyUserIcon = () => new L.Icon({
+                        iconUrl: ICONS[Object.keys(ICONS)[i%Object.keys(ICONS).length]],
+                        iconRetinaUrl: ICONS[Object.keys(ICONS)[i%Object.keys(ICONS).length]],
+                        popupAnchor: [-0, -0],
+                        iconSize: [30, 42],
+                    });
+                    return <UserMarker MarkerIcon={nearbyUserIcon()} displayName={displayName(userOther)} position={userOther.position} user={userOther}/>
+                })}
                 {reports.map(report => (
                     <Marker key={report.id} position={[report.latitude, report.longitude]}>
                     <Popup>
